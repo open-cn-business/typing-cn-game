@@ -1,6 +1,17 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import {onMounted} from "vue";
+import WebFont from "webfontloader";
+
+onMounted(() => {
+  WebFont.load({
+    custom: {
+      families: ['Comic Sans MS'],
+      urls: ['/font/Comic-Sans-MS.ttf']
+    }
+  });
+})
 </script>
 
 <template>
