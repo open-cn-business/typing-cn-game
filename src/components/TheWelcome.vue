@@ -1,8 +1,9 @@
 <script setup lang="ts">
 
-import {ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import PinYinBlock from "@/components/PinyinBlock.vue";
 type pinyinCtx = InstanceType<typeof PinYinBlock>;
+type KeydownHandler = (event: KeyboardEvent) => void;
 
 const pinyin = ref('xin xin xiang rong');
 const word = ref('欣欣向荣');
@@ -13,6 +14,19 @@ function handleClick() {
   childRef.value?.render();
 }
 
+const handleKeydown: KeydownHandler = (event) => {
+  // 处理键盘输入
+  console.log('event', event.key);
+}
+
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown)
+})
 </script>
 
 <template>
