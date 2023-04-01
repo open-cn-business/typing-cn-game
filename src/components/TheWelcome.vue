@@ -23,6 +23,6 @@ function handleClick() {
     <input v-model="word" placeholder="欣欣向荣" />
     <button @click="handleClick">Generate</button>
 
-    <pin-yin-block ref="childRef"/>
+    <pin-yin-block :pinyin="pinyin" :word="word" ref="childRef"/>
   </div>
 </template>
