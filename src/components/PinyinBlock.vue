@@ -14,6 +14,7 @@ class WordCanvas {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   distance = 20;
+  pinyinMarginLeft = 0;
 
   constructor(public word: string, public letters: Letter[], public fontSize: number, public cnWord: string) {
     console.log('write cn word ', cnWord);
@@ -24,6 +25,7 @@ class WordCanvas {
     const letterWidth = this.ctx.measureText(this.word).width;
     const wordWidth = this.ctx.measureText(this.cnWord).width;
     this.canvas.width = Math.max.apply(null, [letterWidth, wordWidth]);
+    this.pinyinMarginLeft = (this.canvas.width - letterWidth) / 2;
     console.log(`${word}.with = ${this.canvas.width}`);
     const oneLineHeight = this.fontSize * 1.5;
     this.canvas.height = oneLineHeight * 2 + this.distance;
@@ -41,7 +43,7 @@ class WordCanvas {
   }
 
   getLetterXPosition(index: number): number {
-    let x = 0;
+    let x = this.pinyinMarginLeft;
     for (let i = 0; i < index; i++) {
       x += this.ctx.measureText(this.letters[i].char).width;
     }
