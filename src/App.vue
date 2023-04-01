@@ -7,8 +7,8 @@ import WebFont from "webfontloader";
 onMounted(() => {
   WebFont.load({
     custom: {
-      families: ['Comic Sans MS'],
-      urls: ['/font/Comic-Sans-MS.ttf']
+      families: ['fontA', 'fontB'],
+      urls: ['/typing-cn-game/font/MaShanZheng-Regular.ttf', '/typing-cn-game/font/Comic-Sans-MS.ttf']
     }
   });
 })
