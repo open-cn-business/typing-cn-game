@@ -12,6 +12,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@vikadata/vika": "^1.1.5",
+    "apitable": "^0.8.3",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
     "webfontloader": "^1.6.28"

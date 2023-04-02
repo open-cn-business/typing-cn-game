@@ -133,13 +133,13 @@ export default defineComponent({
             if (currentWordIndex == charArr.length) {
               finishedEvent();
             }else {
-              waitForInput = curWord[charIndexInWord];
+              waitForInput = curWord[charIndexInWord].toLowerCase();
             }
           }else {
             // char green
             curCanvas.canvas.makeCharGreen(charIndexInWord);
             charIndexInWord++;
-            waitForInput = curWord[charIndexInWord];
+            waitForInput = curWord[charIndexInWord].toLowerCase();
           }
 
         }else {
@@ -181,7 +181,7 @@ export default defineComponent({
         ctx.drawImage(wordCanvas.canvas, x, 20);
         x += wordCanvas.canvas.width + 20;
       }
-      waitForInput = charArr[0][0];
+      waitForInput = charArr[0][0].toLowerCase();
 
       ctx.font = '30px \'Comic Sans MS\', \'Ma Shan Zheng\', Arial';
       ctx.fillStyle = '#000';
