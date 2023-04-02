@@ -17,7 +17,15 @@ function handleClick() {
 const handleKeydown: KeydownHandler = (event) => {
   // 处理键盘输入
   console.log('event', event.key);
-  childRef.value?.append(event.key);
+  if (event.key.length > 1) {
+    return;
+  }
+  const ascii = event.key.charAt(0).charCodeAt(0);
+  const isLetter = (ascii >= 65 && ascii <= 90) || (ascii >= 97 && ascii <= 122);
+  if (!isLetter) {
+    return;
+  }
+  childRef.value?.append(event.key.toLowerCase());
 }
 
 const onFinished = (data: any) => {
