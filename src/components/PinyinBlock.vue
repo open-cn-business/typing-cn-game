@@ -1,5 +1,5 @@
 <script lang="ts">
-import {defineComponent, getCurrentInstance, onMounted, ref} from 'vue';
+import {defineComponent, defineEmits, getCurrentInstance, onMounted, ref} from 'vue';
 
 interface Props {
   pinyin: string;
@@ -9,24 +9,54 @@ interface Props {
 class Letter {
   constructor(public char: string, public color: string) {}
 }
+class WordCanvasContainer{
+  constructor(public canvas: WordCanvas, public x: number, public y: number) {
+  }
 
+  reset(ctx: CanvasRenderingContext2D) {
+    ctx.drawImage(this.canvas.canvas, this.x, this.y);
+  }
+
+  clear(ctx: CanvasRenderingContext2D){
+    ctx.clearRect(this.x, this.y, this.canvas.canvas.width, this.canvas.canvas.height);
+  }
+}
 class WordCanvas {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   distance = 20;
   pinyinMarginLeft = 0;
 
-  constructor(public word: string, public letters: Letter[], public fontSize: number, public cnWord: string) {
-    console.log('write cn word ', cnWord);
-    this.canvas = document.createElement('canvas');
-    this.ctx = this.canvas.getContext('2d')!;
+  greenColor = 'hsla(160, 100%, 37%, 1)';
+
+
+  makeAllGreen(){
+    this.letters.forEach((letter, index) => {
+      letter.color = this.greenColor;
+    });
+    this.cnWord.color = this.greenColor;
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.render();
+  }
+  makeCharGreen(index: number){
+    this.letters[index].color = this.greenColor;
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.render();
+  }
+
+  makeCharRed(index: number){
+    this.letters[index].color = 'red';
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.render();
+  }
+
+  private render(){
     this.ctx.font = `${this.fontSize}px 'Comic Sans MS', 'Ma Shan Zheng', sans-serif`;
     this.ctx.textBaseline = 'middle';
     const letterWidth = this.ctx.measureText(this.word).width;
-    const wordWidth = this.ctx.measureText(this.cnWord).width;
+    const wordWidth = this.ctx.measureText(this.cnWord.char).width;
     this.canvas.width = Math.max.apply(null, [letterWidth, wordWidth]);
     this.pinyinMarginLeft = (this.canvas.width - letterWidth) / 2;
-    console.log(`${word}.with = ${this.canvas.width}`);
     const oneLineHeight = this.fontSize * 1.5;
     this.canvas.height = oneLineHeight * 2 + this.distance;
     this.ctx.font = `${this.fontSize}px 'Comic Sans MS', 'Ma Shan Zheng', sans-serif`;
@@ -35,11 +65,16 @@ class WordCanvas {
       this.ctx.fillStyle = letter.color;
       const xp = this.getLetterXPosition(index);
       const yp = oneLineHeight / 2;
-      console.log(`write ${letter.char} from x is ${xp}`)
       this.ctx.fillText(letter.char, xp, yp);
     });
+    this.ctx.fillStyle = this.cnWord.color;
+    this.ctx.fillText(this.cnWord.char, (this.canvas.width - wordWidth) / 2, oneLineHeight + this.distance);
+  }
 
-    this.ctx.fillText(cnWord, (this.canvas.width - wordWidth) / 2, oneLineHeight + this.distance);
+  constructor(public word: string, public letters: Letter[], public fontSize: number, public cnWord: Letter) {
+    this.canvas = document.createElement('canvas');
+    this.ctx = this.canvas.getContext('2d')!;
+    this.render();
   }
 
   getLetterXPosition(index: number): number {
@@ -58,6 +93,8 @@ class WordCanvas {
 //   constructor(public letter: Letter[], public word: string) {}
 // }
 
+const emits = defineEmits(['finished']);
+
 export default defineComponent({
   name: 'PinYinBlock',
   props: {
@@ -70,18 +107,60 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props) {
+  setup(props, {emit}) {
     const instance = getCurrentInstance();
+    let childCanvasArray: WordCanvasContainer[] = [];
+    let charArr: string[][] = [];
+    let waitForInput = '';
+    let currentWordIndex = 0;
+    let charIndexInWord = 0;
     let ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement;
-    function render() {
-      console.log('render called');
+    function append(key: string) {
       if (ctx && canvas) {
+        const curCanvas = childCanvasArray[currentWordIndex];
+        if (!curCanvas) {
+          return;
+        }
+        let curWord = charArr[currentWordIndex];
+        curCanvas.clear(ctx);
+        if (key == waitForInput) {
+          if (curWord.length === (charIndexInWord + 1)){
+            // all green
+            curCanvas.canvas.makeAllGreen();
+            currentWordIndex++;
+            charIndexInWord = 0;
+            curWord = charArr[currentWordIndex];
+            if (currentWordIndex == charArr.length) {
+              finishedEvent();
+            }else {
+              waitForInput = curWord[charIndexInWord];
+            }
+          }else {
+            // char green
+            curCanvas.canvas.makeCharGreen(charIndexInWord);
+            charIndexInWord++;
+            waitForInput = curWord[charIndexInWord];
+          }
+
+        }else {
+          curCanvas.canvas.makeCharRed(charIndexInWord);
+        }
+        curCanvas.reset(ctx);
+      }
+    }
+
+    function render(){
+      if (ctx && canvas) {
+        childCanvasArray = [];
+        currentWordIndex = 0;
+        charIndexInWord = 0;
+        charArr = [];
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         draw(ctx, canvas);
       }
     }
 
     const draw = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
-      console.log('pin yin width', ctx.measureText(props.pinyin).width)
       // 清空画布
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -95,12 +174,14 @@ export default defineComponent({
       for (let i = 0; i < words.length; i++) {
         const word = words[i];
         const cnWord = words2[i];
-        const letters = word.split('').map(char => new Letter(char, '#000'));
-        const wordCanvas = new WordCanvas(word, letters, fontSize, cnWord);
+        const letters = word.split('').map(char => new Letter(char, 'grey'));
+        charArr = [...charArr, word.split('')];
+        const wordCanvas = new WordCanvas(word, letters, fontSize, {char: cnWord, color: 'grey'});
+        childCanvasArray.push(new WordCanvasContainer(wordCanvas, x, 20));
         ctx.drawImage(wordCanvas.canvas, x, 20);
         x += wordCanvas.canvas.width + 20;
-        console.log(`x = ${x}`);
       }
+      waitForInput = charArr[0][0];
 
       ctx.font = '30px \'Comic Sans MS\', \'Ma Shan Zheng\', Arial';
       ctx.fillStyle = '#000';
@@ -113,7 +194,12 @@ export default defineComponent({
       draw(ctx, canvas);
     });
 
-    return {word: props.word, pinyin: props.pinyin, render };
+    function finishedEvent() {
+      const eventData = {};
+      emit('finished', eventData);
+    }
+
+    return {render, append};
   }
 });
 </script>
