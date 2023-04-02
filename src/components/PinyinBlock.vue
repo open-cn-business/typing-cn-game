@@ -30,8 +30,6 @@ class WordCanvas {
     const oneLineHeight = this.fontSize * 1.5;
     this.canvas.height = oneLineHeight * 2 + this.distance;
     this.ctx.font = `${this.fontSize}px 'Comic Sans MS', 'Ma Shan Zheng', sans-serif`;
-    (this.ctx as any).fontWeight = 100;
-    this.ctx.lineWidth = 1;
     this.ctx.textBaseline = 'middle';
     this.letters.forEach((letter, index) => {
       this.ctx.fillStyle = letter.color;
@@ -104,9 +102,7 @@ export default defineComponent({
         console.log(`x = ${x}`);
       }
 
-      ctx.font = `${fontSize}px \'Comic Sans MS\', \'Ma Shan Zheng\',Arial`;
-      (ctx as any).fontWeight = 100;
-      ctx.lineWidth = 1;
+      ctx.font = '30px \'Comic Sans MS\', \'Ma Shan Zheng\', Arial';
       ctx.fillStyle = '#000';
     };
 

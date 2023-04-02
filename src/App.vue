@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import {onMounted, ref} from "vue";
+import {onMounted} from "vue";
 
-const v = ref(false);
 onMounted(() => {
-  console.log('root component mounted')
+  console.log('component load')
 })
 </script>
 
