@@ -6,7 +6,7 @@ defineProps<{
 
 <template>
   <div class="greetings">
-    <h1 class="green" style="font-family: 'fontA', 'fontB', sans-serif">{{ msg }} 你好</h1>
+    <h1 class="green" style="font-family: 'Comic Sans MS', 'Ma Shan Zheng', sans-serif">{{ msg }} 你好</h1>
   </div>
 </template>
 
