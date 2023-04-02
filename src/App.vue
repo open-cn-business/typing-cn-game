@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import {onMounted} from "vue";
-import WebFont from "webfontloader";
+import {onMounted, ref} from "vue";
 
+const v = ref(false);
 onMounted(() => {
-  WebFont.load({
-    custom: {
-      families: ['fontA', 'fontB'],
-      urls: ['/typing-cn-game/font/MaShanZheng-Regular.ttf', '/typing-cn-game/font/Comic-Sans-MS.ttf']
-    }
-  });
+  console.log('root component mounted')
 })
 </script>
 

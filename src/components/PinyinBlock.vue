@@ -20,7 +20,7 @@ class WordCanvas {
     console.log('write cn word ', cnWord);
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d')!;
-    this.ctx.font = `${this.fontSize}px 'Comic Sans MS', sans-serif`;
+    this.ctx.font = `${this.fontSize}px 'Comic Sans MS', 'Ma Shan Zheng', sans-serif`;
     this.ctx.textBaseline = 'middle';
     const letterWidth = this.ctx.measureText(this.word).width;
     const wordWidth = this.ctx.measureText(this.cnWord).width;
@@ -29,7 +29,9 @@ class WordCanvas {
     console.log(`${word}.with = ${this.canvas.width}`);
     const oneLineHeight = this.fontSize * 1.5;
     this.canvas.height = oneLineHeight * 2 + this.distance;
-    this.ctx.font = `${this.fontSize}px 'Comic Sans MS', sans-serif`;
+    this.ctx.font = `${this.fontSize}px 'Comic Sans MS', 'Ma Shan Zheng', sans-serif`;
+    (this.ctx as any).fontWeight = 100;
+    this.ctx.lineWidth = 1;
     this.ctx.textBaseline = 'middle';
     this.letters.forEach((letter, index) => {
       this.ctx.fillStyle = letter.color;
@@ -102,7 +104,9 @@ export default defineComponent({
         console.log(`x = ${x}`);
       }
 
-      ctx.font = '30px \'Comic Sans MS\',Arial';
+      ctx.font = `${fontSize}px \'Comic Sans MS\', \'Ma Shan Zheng\',Arial`;
+      (ctx as any).fontWeight = 100;
+      ctx.lineWidth = 1;
       ctx.fillStyle = '#000';
     };
 
