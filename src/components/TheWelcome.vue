@@ -5,8 +5,8 @@ import PinYinBlock from "@/components/PinyinBlock.vue";
 type pinyinCtx = InstanceType<typeof PinYinBlock>;
 type KeydownHandler = (event: KeyboardEvent) => void;
 
-const pinyin = ref('xin xin xiang rong');
-const word = ref('欣欣向荣');
+const pinyin = ref('si wu ji dan');
+const word = ref('肆无忌惮');
 
 const childRef = ref<pinyinCtx | null>(null);
 function handleClick() {
@@ -17,6 +17,12 @@ function handleClick() {
 const handleKeydown: KeydownHandler = (event) => {
   // 处理键盘输入
   console.log('event', event.key);
+  childRef.value?.append(event.key);
+}
+
+const onFinished = (data: any) => {
+  // 处理键盘输入
+  console.log('finished', data);
 }
 
 
@@ -37,6 +43,6 @@ onUnmounted(() => {
     <input v-model="word" placeholder="欣欣向荣" />
     <button @click="handleClick">Generate</button>
 
-    <pin-yin-block :pinyin="pinyin" :word="word" ref="childRef"/>
+    <pin-yin-block @finished="onFinished" :pinyin="pinyin" :word="word" ref="childRef"/>
   </div>
 </template>
