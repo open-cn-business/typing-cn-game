@@ -33,6 +33,10 @@ const onFinished = (data: any) => {
   console.log('finished', data);
 }
 
+const onTypeError = (data: any) => {
+  console.log('type error', data);
+};
+
 
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown)
@@ -51,6 +55,6 @@ onUnmounted(() => {
     <input v-model="word" placeholder="欣欣向荣" />
     <button @click="handleClick">Generate</button>
 
-    <pin-yin-block @finished="onFinished" :pinyin="pinyin" :word="word" ref="childRef"/>
+    <pin-yin-block @finished="onFinished" @type-error="onTypeError" :pinyin="pinyin" :word="word" ref="childRef"/>
   </div>
 </template>
