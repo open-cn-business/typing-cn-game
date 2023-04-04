@@ -7,7 +7,7 @@ import AudioButton from "@/components/base/AudioButton.vue";
   <div class="greetings">
     <h1 class="green" style="font-family: 'Comic Sans MS', 'Ma Shan Zheng', sans-serif">打字游戏</h1>
     <h5 class="green" style="font-family: 'Comic Sans MS', 'Ma Shan Zheng', sans-serif;">Typing Game</h5>
-    <AudioButton class="mar" delay="100" audio-url="/typing-cn-game/music/menuClick.mp3" text="开始游戏" url="./game"/>
+    <AudioButton class="mar" :delay="100" audio-url="/typing-cn-game/music/menuClick.mp3" text="开始游戏" url="./game"/>
   </div>
 </template>
 

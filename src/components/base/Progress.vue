@@ -4,19 +4,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {computed} from "vue";
 
 const props = defineProps({
   currentValue: {
     type: Number,
     required: true,
-    validator: (value) => value >= 0 && value <= 100
+    validator: (value: number) => value >= 0 && value <= 100
   },
   maxValue: {
     type: Number,
     required: true,
-    validator: (value) => value > 0
+    validator: (value: number) => value > 0
   }
 })
 
